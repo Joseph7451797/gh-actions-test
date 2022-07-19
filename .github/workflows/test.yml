@@ -8,3 +8,6 @@ jobs:
     steps:
       - name: Echo GitHub SHA
         run: echo ${{ github.sha }}
+
+      - name: Echo GitHub PR Head SHA
+        run: echo ${{ github.event.pull_request.head.sha }}
