@@ -4,6 +4,7 @@ on: [pull_request]
 
 jobs:
   echo:
+    name: Echo GitHub SHA
     runs-on: ubuntu-latest
     steps:
       - name: Echo GitHub SHA
@@ -11,3 +12,6 @@ jobs:
 
       - name: Echo GitHub PR Head SHA
         run: echo ${{ github.event.pull_request.head.sha }}
+
+      - name: Echo GitHUb merge commit SHA
+        run: echo ${{ github.event.pull_request.merge_commit_sha }}
