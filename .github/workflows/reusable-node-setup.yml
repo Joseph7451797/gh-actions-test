@@ -1,0 +1,43 @@
+name: Reusable Node.js & Yarn Setup
+
+on:
+  workflow_call:
+
+env:
+  NODE_VERSION: 16
+
+jobs:
+  setup:
+    name: Set up Node.js and node modules
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Handle yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: |
+            node_modules
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          # The cache key contains all the information we want to fix: OS, node version, and the contents of the
+          # yarn.lock file, using hashFiles to convert the file contents into a string
+          key: ${{ runner.os }}-node${{ env.NODE_VERSION }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node${{ env.NODE_VERSION }}-yarn-
+
+      - name: Install dependencies
+        run: rm -f .yarnclean && yarn --frozen-lockfile --ignore-engines --non-interactive --silent
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+          HUSKY_SKIP_INSTALL: true

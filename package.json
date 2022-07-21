@@ -1,0 +1,14 @@
+{
+  "name": "gh-actions-test",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "https://github.com/Joseph7451797/gh-actions-test.git",
+  "author": "Joseph Chang <k7451797@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^0.18.1"
+  }
+}

@@ -1,20 +1,17 @@
-name: Echo GitHub SHA
+name: Tests
 
 on:
   pull_request:
-    types:
-      - closed
+    # Further explanation of the "synchronize" event: https://github.community/t/what-is-a-pull-request-synchronize-event/14784
+    types: [opened, synchronize, reopened]
 
 jobs:
-  echo:
-    name: Echo GitHub SHA
+  unit-test:
+    name: Unit tests
     runs-on: ubuntu-latest
     steps:
-      - name: Echo GitHub SHA
-        run: echo ${{ github.sha }}
+      - name: Setup
+        uses: ./.github/workflows/reusable-node-setup.yml
 
-      - name: Echo GitHub PR Head SHA
-        run: echo ${{ github.event.pull_request.head.sha }}
-
-      - name: Echo GitHUb merge commit SHA
-        run: echo ${{ github.event.pull_request.merge_commit_sha }}
+      - name: Run unit tests
+        run: yarn test
