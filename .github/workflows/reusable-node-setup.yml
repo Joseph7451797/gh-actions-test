@@ -2,6 +2,10 @@ name: Reusable Node.js & Yarn Setup
 
 on:
   workflow_call:
+    inputs:
+      node_version:
+        required: true
+        type: number
 
 jobs:
   setup:
@@ -14,7 +18,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ inputs.node_version }}
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -29,9 +33,9 @@ jobs:
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
           # The cache key contains all the information we want to fix: OS, node version, and the contents of the
           # yarn.lock file, using hashFiles to convert the file contents into a string
-          key: ${{ runner.os }}-node${{ env.NODE_VERSION }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-node${{ inputs.node_version }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-node${{ env.NODE_VERSION }}-yarn-
+            ${{ runner.os }}-node${{ inputs.node_version }}-yarn-
 
       - name: Install dependencies
         run: rm -f .yarnclean && yarn --frozen-lockfile --ignore-engines --non-interactive --silent

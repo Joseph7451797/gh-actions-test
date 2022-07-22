@@ -12,6 +12,8 @@ jobs:
   setup:
     name: Setup
     uses: ./.github/workflows/reusable-node-setup.yml
+    with:
+      node_version: ${{ env.NODE_VERSION }}
 
   unit-test:
     name: Unit tests
