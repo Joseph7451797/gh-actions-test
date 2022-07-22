@@ -19,5 +19,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Handle yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: |
+            node_modules
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          # The cache key contains all the information we want to fix: OS, node version, and the contents of the
+          # yarn.lock file, using hashFiles to convert the file contents into a string
+          key: ${{ runner.os }}-node${{ env.NODE_VERSION }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node${{ env.NODE_VERSION }}-yarn-
+
       - name: Run unit tests
         run: yarn test
