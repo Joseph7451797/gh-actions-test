@@ -6,12 +6,13 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
+  setup:
+    name: Setup
+    uses: ./.github/workflows/reusable-node-setup.yml
+
   unit-test:
     name: Unit tests
     runs-on: ubuntu-latest
     steps:
-      - name: Setup
-        uses: ./.github/workflows/reusable-node-setup.yml
-
       - name: Run unit tests
         run: yarn test
