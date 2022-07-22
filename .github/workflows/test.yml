@@ -5,6 +5,9 @@ on:
     # Further explanation of the "synchronize" event: https://github.community/t/what-is-a-pull-request-synchronize-event/14784
     types: [opened, synchronize, reopened]
 
+env:
+  NODE_VERSION: 16
+
 jobs:
   setup:
     name: Setup

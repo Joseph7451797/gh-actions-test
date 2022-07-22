@@ -3,9 +3,6 @@ name: Reusable Node.js & Yarn Setup
 on:
   workflow_call:
 
-env:
-  NODE_VERSION: 16
-
 jobs:
   setup:
     name: Set up Node.js and node modules
