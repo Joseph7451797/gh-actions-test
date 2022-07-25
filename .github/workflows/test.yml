@@ -1,20 +1,41 @@
-name: Echo GitHub SHA
+name: Tests
 
 on:
   pull_request:
-    types:
-      - closed
+    # Further explanation of the "synchronize" event: https://github.community/t/what-is-a-pull-request-synchronize-event/14784
+    types: [opened, synchronize, reopened]
+
+env:
+  NODE_VERSION: 16
 
 jobs:
-  echo:
-    name: Echo GitHub SHA
+  setup:
+    name: Setup
+    uses: ./.github/workflows/reusable-node-setup.yml
+    with:
+      node_version: 16
+
+  unit-test:
+    name: Unit tests
     runs-on: ubuntu-latest
+    needs:
+      - setup
     steps:
-      - name: Echo GitHub SHA
-        run: echo ${{ github.sha }}
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Echo GitHub PR Head SHA
-        run: echo ${{ github.event.pull_request.head.sha }}
+      - name: Handle yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: |
+            node_modules
+            ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          # The cache key contains all the information we want to fix: OS, node version, and the contents of the
+          # yarn.lock file, using hashFiles to convert the file contents into a string
+          key: ${{ runner.os }}-node${{ env.NODE_VERSION }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node${{ env.NODE_VERSION }}-yarn-
 
-      - name: Echo GitHUb merge commit SHA
-        run: echo ${{ github.event.pull_request.merge_commit_sha }}
+      - name: Run unit tests
+        run: yarn test
