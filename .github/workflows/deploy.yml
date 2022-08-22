@@ -7,17 +7,13 @@ on:
 
 env:
   NODE_VERSION: 16
-  STAGING_NAME: staging
-  STAGING_URL: https://maacstaging.cresclab.com/
-  PRODUCTION_NAME: production
-  PRODUCTION_URL: https://maac.cresclab.com/
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment:
-      name: ${{ github.event.pull_request.base.ref == 'master' && ${{ env.PRODUCTION_NAME }} || ${{ env.STAGING_NAME }} }}
-      url: ${{ github.event.pull_request.base.ref == 'master' && ${{ env.PRODUCTION_URL }} || ${{ env.STAGING_URL }} }}
+      name: ${{ github.event.pull_request.base.ref == 'master' && 'production' || 'staging' }}
+      url: ${{ github.event.pull_request.base.ref == 'master' && 'https://maac.cresclab.com/' || 'https://maacstaging.cresclab.com/' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
